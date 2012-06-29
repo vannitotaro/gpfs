@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Copyright 2012 Giovanni Totaro (www.ingtotaro.it)
+# License: MIT (http://www.opensource.org/licenses/MIT)
+# 
+# Google+: https://plus.google.com/u/0/113250814961864918365/about
+# Twitter: https://twitter.com/vannitotaro
+#
+# Google Plus Follower Stats (gpfs) v20120629A
+# Official repository: https://github.com/vannitotaro/gpfs
+#
+# Tested under Ubuntu 12.04 32-bit on June 29, 2012.
+#
+
+grep '^,\[\[[\[",]' response.txt |
+grep -Eo '[0-9]{21}' |
+xargs -I{} sh -c "\
+  curl -s 'https://plus.google.com/u/0/{}/about' >gpfs.profile.tmp; \
+  grep -Eo '^,\[[0-9]+,\[\[\"' gpfs.profile.tmp | \
+  ( \
+    grep -Eo '[0-9]+' | tr -d '\n'; \
+    echo -n ' <a href=\"https://plus.google.com/u/0/{}/about\">'\
+  ); \
+  grep -Eo '<a href=\"{}\"[^<]*</a>' gpfs.profile.tmp | \
+  grep -Po '(?<=>).*(?=<)' | tr -d '\n';
+  echo '</a><br/>';
+  rm gpfs.profile.tmp" | \
+grep --line-buffered -v '^ ' |
+tee >(sort -o gpfs.html.tmp -rn)
+echo '<!doctype html><html><head><meta charset="utf-8"></head><body>' >gpfs.html
+cat gpfs.html.tmp >>gpfs.html
+rm gpfs.html.tmp
+echo '</body></html>' >>gpfs.html
+xdg-open gpfs.html
+
