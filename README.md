@@ -1,12 +1,26 @@
 # Google Plus Follower Stats (gpfs) #
 
 Copyright 2012 Giovanni Totaro (http://www.ingtotaro.it)
+
 License: MIT (http://www.opensource.org/licenses/MIT)
  
 Google+: https://plus.google.com/u/0/113250814961864918365/about
+
 Twitter: https://twitter.com/vannitotaro
 
 Official gpfs source code repository: https://github.com/vannitotaro/gpfs
+
+
+## INTRO ##
+**Who Are Your Most Influential G+ Followers?**
+Probably you don't know the answer.
+Maybe you are not following back someone with 100.000 or more followers... BAD!
+
+This is a tiny dirty script that gives you a clickable list of people
+who have you in their circles, ordered by how many people have them
+in their circles in descending order...
+i.e. you get **your followers sorted from most to least followed one**.
+Nice, isn't it?
 
 ## DISCLAIMER ##
 I am not affiliated with Google and Google does not endorse this software.
