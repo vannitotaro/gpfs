@@ -6,30 +6,66 @@
 # Google+: https://plus.google.com/u/0/113250814961864918365/about
 # Twitter: https://twitter.com/vannitotaro
 #
-# Google Plus Follower Stats (gpfs) v20120629A
+# Google Plus Follower Stats (gpfs) v20120702A
 # Official repository: https://github.com/vannitotaro/gpfs
 #
-# Tested under Ubuntu 12.04 32-bit on June 29, 2012.
+# Tested under Ubuntu 12.04 32-bit on July 2, 2012.
 #
 
+delete_temp_files() {
+  find /tmp -name 'gpfs_*' -exec rm {} + 2>/dev/null
+}
+
+ctrl_c() {
+  {
+    echo -n ' Exiting...'
+    for CHILD_PID in ${CHILD_PIDS[*]}; do
+      kill -9 $CHILD_PID
+    done
+    wait
+    sleep 5
+    delete_temp_files
+    echo
+    exit 1
+  } 2>/dev/null
+}
+
 grep '^,\[\[[\[",]' response.txt |
-grep -Eo '[0-9]{21}' |
-xargs -I{} sh -c "\
-  curl -s 'https://plus.google.com/u/0/{}/about' >gpfs.profile.tmp; \
-  grep -Eo '^,\[[0-9]+,\[\[\"' gpfs.profile.tmp | \
-  ( \
-    grep -Eo '[0-9]+' | tr -d '\n'; \
-    echo -n ' <a href=\"https://plus.google.com/u/0/{}/about\">'\
-  ); \
-  grep -Eo '<a href=\"{}\"[^<]*</a>' gpfs.profile.tmp | \
-  grep -Po '(?<=>).*(?=<)' | tr -d '\n';
-  echo '</a><br/>';
-  rm gpfs.profile.tmp" | \
-grep --line-buffered -v '^ ' |
-tee >(sort -o gpfs.html.tmp -rn)
+grep -Eo '[0-9]{21}' >/tmp/gpfs_profileids
+cd /tmp
+split -n l/8 gpfs_profileids gpfs_profileids_
+cd - >/dev/null
+
+CHILD_COUNT=0
+for PROFILE_IDS_SLICE in /tmp/gpfs_profileids_*; do
+  cat $PROFILE_IDS_SLICE |
+  xargs -I{} bash -c "
+    echo -n '.' 1>&2
+    curl -s 'https://plus.google.com/u/0/{}/about' >/tmp/gpfs_profile_{}
+    grep -Eo '^,\[[0-9]+,\[\[\"' /tmp/gpfs_profile_{} |
+    {
+      grep -Eo '[0-9]+' | tr -d '\n'
+      echo -n ' <a href=\"https://plus.google.com/u/0/{}/about\">'
+    }
+    grep -Eo '<a href=\"{}\"[^<]*</a>' /tmp/gpfs_profile_{} |
+    grep -Po '(?<=>).*(?=<)' | tr -d '\n'
+    echo '</a><br/>'
+  " >$PROFILE_IDS_SLICE\_html &
+  CHILD_PIDS[$CHILD_COUNT]=$!
+  CHILD_COUNT=$CHILD_COUNT+1
+done
+
+trap ctrl_c INT
+wait
+
 echo '<!doctype html><html><head><meta charset="utf-8"></head><body>' >gpfs.html
-cat gpfs.html.tmp >>gpfs.html
-rm gpfs.html.tmp
+cat /tmp/gpfs_profileids_*_html |
+grep -v '^ ' |
+sort -rn >>gpfs.html
 echo '</body></html>' >>gpfs.html
+
+echo 'OK'
 xdg-open gpfs.html
+
+delete_temp_files
 
