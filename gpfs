@@ -41,7 +41,7 @@ for PROFILE_IDS_SLICE in /tmp/gpfs_profileids_*; do
   cat $PROFILE_IDS_SLICE |
   xargs -I{} bash -c "
     echo -n '.' 1>&2
-    curl -s 'https://plus.google.com/u/0/{}/about' >/tmp/gpfs_profile_{}
+    curl -Ls 'https://plus.google.com/u/0/{}/about' >/tmp/gpfs_profile_{}
     grep -Eo '^,\[[0-9]+,\[\[\"' /tmp/gpfs_profile_{} |
     {
       grep -Eo '[0-9]+' | tr -d '\n'
