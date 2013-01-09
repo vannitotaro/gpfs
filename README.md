@@ -1,6 +1,6 @@
 # Google Plus Follower Stats (gpfs) #
 
-Copyright 2012 Giovanni Totaro (http://www.ingtotaro.it)
+Copyright 2012-2013 Giovanni Totaro (http://www.ingtotaro.it)
 
 License: MIT (http://www.opensource.org/licenses/MIT)
  
