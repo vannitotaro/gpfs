@@ -50,6 +50,7 @@ for PROFILE_IDS_SLICE in /tmp/gpfs_profileids_*; do
     grep -Po '(?<=<meta itemprop=\"name\" content=\")[^\"]*(?=\">)' /tmp/gpfs_profile_{} |
     tr -d '\n'
     echo ']</a><br/>'
+    rm /tmp/gpfs_profile_{}
   " >$PROFILE_IDS_SLICE\_html &
   CHILD_PIDS[$CHILD_COUNT]=$!
   CHILD_COUNT=$CHILD_COUNT+1
