@@ -15,7 +15,7 @@ Official gpfs source code repository: https://github.com/vannitotaro/gpfs
 **Who Are Your Most Influential G+ Followers?**
 
 Probably you don't know the answer.
-Maybe you are not following back someone with 100.000 or more followers... BAD!
+Maybe you are not following back someone with 100000 or more followers... BAD!
 
 This is a `bash` script that gives you a clickable list of people
 who have you in their circles, ordered by how many people have them
@@ -27,9 +27,11 @@ Nice, isn't it?
 I am not affiliated with Google and Google does not endorse this software.
 
 ## NOTES ##
-- This script does not make use of official Google APIs, so it can stop working
+- The script does not make use of official Google APIs, so it can stop working
   if Google makes changes to the Google+ implementation.
-- This script has been tested only under Ubuntu 12.04 32-bit.
+- If you have more than 10000 followers, the script will consider only the
+  10000 most relevant ones (according to an internal Google+ algorithm).
+- The script has been tested only under Ubuntu 12.10 32-bit.
 - You need to install `curl` before running the script:
   `sudo apt-get install curl`
 
