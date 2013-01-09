@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# Copyright 2012 Giovanni Totaro (www.ingtotaro.it)
+# Copyright 2012-2013 Giovanni Totaro (www.ingtotaro.it)
 # License: MIT (http://www.opensource.org/licenses/MIT)
 # 
 # Google+: https://plus.google.com/u/0/113250814961864918365/about
 # Twitter: https://twitter.com/vannitotaro
 #
-# Google Plus Follower Stats (gpfs) v20120702A
+# Google Plus Follower Stats (gpfs) v20130109A
 # Official repository: https://github.com/vannitotaro/gpfs
 #
-# Tested under Ubuntu 12.04 32-bit on July 2, 2012.
+# Tested under Ubuntu 12.10 32-bit on January 9, 2013.
 #
 
 delete_temp_files() {
@@ -45,11 +45,11 @@ for PROFILE_IDS_SLICE in /tmp/gpfs_profileids_*; do
     grep -Eo '^,\[[0-9]+,\[\[\"' /tmp/gpfs_profile_{} |
     {
       grep -Eo '[0-9]+' | tr -d '\n'
-      echo -n ' <a href=\"https://plus.google.com/u/0/{}/about\">'
+      echo -n ' <a href=\"https://plus.google.com/u/0/{}/about\">['
     }
-    grep -Eo '<a href=\"{}\"[^<]*</a>' /tmp/gpfs_profile_{} |
-    grep -Po '(?<=>).*(?=<)' | tr -d '\n'
-    echo '</a><br/>'
+    grep -Po '(?<=<meta itemprop=\"name\" content=\")[^\"]*(?=\">)' /tmp/gpfs_profile_{} |
+    tr -d '\n'
+    echo ']</a><br/>'
   " >$PROFILE_IDS_SLICE\_html &
   CHILD_PIDS[$CHILD_COUNT]=$!
   CHILD_COUNT=$CHILD_COUNT+1
